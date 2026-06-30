@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0f141b">
+<title>Allenamento</title>
+<style>
+  :root{
+    --bg:#0f141b; --bg2:#161e29; --card:#1b2531; --card2:#212d3b;
+    --line:#2b3848; --txt:#f1f5f9; --mut:#93a4b8; --mut2:#64748b;
+    --acc:#f59e0b; --acc-d:#b45309; --ok:#22c55e; --ok-d:#15803d;
+    --sky:#38bdf8;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--txt);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:17px; line-height:1.4; padding-bottom:60px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:600px;margin:0 auto;padding:0 14px}
+
+  header{
+    position:sticky;top:0;z-index:20;background:rgba(15,20,27,.92);
+    backdrop-filter:blur(10px);border-bottom:1px solid var(--line);
+    padding:14px 0 10px;
+  }
+  h1{font-size:20px;margin:0 0 2px;letter-spacing:.3px}
+  .sub{color:var(--mut);font-size:13px;margin:0 0 12px}
+
+  .label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--mut2);margin:0 0 6px}
+  .pills{display:flex;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .pills::-webkit-scrollbar{display:none}
+  .pill{
+    flex:0 0 auto;border:1px solid var(--line);background:var(--bg2);color:var(--mut);
+    padding:8px 14px;border-radius:999px;font-size:15px;font-weight:600;cursor:pointer;
+    transition:.15s;white-space:nowrap;
+  }
+  .pill.on{background:var(--acc);border-color:var(--acc);color:#231603}
+  .pills.days .pill{flex:1;text-align:center;min-width:0}
+
+  .daytitle{display:flex;align-items:baseline;justify-content:space-between;margin:18px 0 4px}
+  .daytitle h2{font-size:22px;margin:0}
+  .daytitle .focus{color:var(--acc);font-weight:600;font-size:14px}
+  .prog{color:var(--mut);font-size:14px;font-weight:600}
+
+  .warm{
+    background:var(--bg2);border:1px solid var(--line);border-radius:14px;
+    padding:11px 14px;margin:8px 0 16px;font-size:14px;color:var(--mut);
+    display:flex;gap:9px;align-items:flex-start;
+  }
+  .warm b{color:var(--txt)}
+  .warm .ico{font-size:17px;line-height:1.2}
+
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    margin:0 0 12px;overflow:hidden;transition:.18s;
+  }
+  .card.done{border-color:var(--ok-d)}
+  .top{display:flex;align-items:center;gap:13px;padding:14px 14px 8px}
+  .check{
+    flex:0 0 auto;width:34px;height:34px;border-radius:50%;border:2.5px solid var(--mut2);
+    background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;
+    transition:.15s;padding:0;
+  }
+  .check svg{width:18px;height:18px;opacity:0;transform:scale(.5);transition:.15s}
+  .card.done .check{background:var(--ok);border-color:var(--ok)}
+  .card.done .check svg{opacity:1;transform:scale(1)}
+  .info{flex:1;min-width:0}
+  .name{font-weight:700;font-size:17px;line-height:1.25}
+  .card.done .name{color:var(--mut)}
+  .target{color:var(--acc);font-size:14px;font-weight:600;margin-top:2px}
+
+  .sets{display:flex;flex-wrap:wrap;align-items:center;gap:9px;padding:2px 14px 12px}
+  .sets .slab{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--mut2);font-weight:700;margin-right:2px}
+  .setchip{
+    width:46px;height:46px;border-radius:13px;border:2px solid var(--mut2);
+    background:var(--card2);color:var(--mut);font-weight:700;font-size:16px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;transition:.12s;padding:0;
+  }
+  .setchip.on{background:var(--ok);border-color:var(--ok);color:#0a2912;box-shadow:0 0 0 1px var(--ok)}
+  .setchip:active{transform:scale(.92)}
+
+  .row2{display:flex;align-items:stretch;gap:8px;padding:0 14px 14px}
+  .kg{
+    flex:1;display:flex;align-items:center;gap:7px;background:var(--card2);
+    border:1px solid var(--line);border-radius:11px;padding:9px 12px;
+  }
+  .kg input{
+    background:transparent;border:0;color:var(--txt);font-size:17px;font-weight:700;
+    width:100%;outline:none;font-family:inherit;
+  }
+  .kg .u{color:var(--mut2);font-size:14px;font-weight:600}
+  .kg .t{color:var(--mut2);font-size:13px;margin-right:2px}
+  .vid{
+    flex:0 0 auto;display:flex;align-items:center;gap:6px;text-decoration:none;
+    background:var(--card2);border:1px solid var(--line);border-radius:11px;
+    padding:9px 13px;color:var(--sky);font-size:14px;font-weight:600;
+  }
+  .notebtn{
+    flex:0 0 auto;display:flex;align-items:center;justify-content:center;
+    background:var(--card2);border:1px solid var(--line);border-radius:11px;
+    padding:9px 13px;color:var(--mut);font-size:14px;font-weight:600;cursor:pointer;
+  }
+  .notebtn.has{color:var(--acc);border-color:var(--acc-d)}
+  .exnote{display:none;padding:0 14px 14px}
+  .exnote.open{display:block}
+  textarea{
+    width:100%;background:var(--card2);border:1px solid var(--line);border-radius:11px;
+    color:var(--txt);font-family:inherit;font-size:15px;padding:11px 12px;resize:vertical;
+    min-height:62px;outline:none;line-height:1.45;
+  }
+  textarea::placeholder{color:var(--mut2)}
+
+  .fin{
+    background:linear-gradient(135deg,#16261c,#1a2e20);border:1px solid var(--ok-d);
+    border-radius:16px;padding:14px;margin:4px 0 18px;
+  }
+  .fin .top{padding:0}
+  .fin .badge{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--ok);font-weight:700}
+  .fin .name{font-size:18px;margin-top:3px}
+  .fin .target{color:#bbf7d0}
+  .fin .row2{padding:12px 0 0}
+
+  .sessnote{margin:6px 0 30px}
+  .sessnote .label{margin-bottom:7px}
+  .sessnote textarea{min-height:90px;background:var(--bg2)}
+
+  footer{text-align:center;color:var(--mut2);font-size:12px;padding:10px 0 24px;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🔥 Allenamento — Corpo Libero</h1>
+    <p class="sub">Recomp · 3 sessioni × 45' · ruota A → B → C</p>
+    <p class="label">Settimana</p>
+    <div class="pills weeks" id="weeks"></div>
+    <div style="height:11px"></div>
+    <p class="label">Giorno</p>
+    <div class="pills days" id="days"></div>
+  </header>
+
+  <main id="view"></main>
+
+  <footer>
+    Tocca le serie fatte · tutto si salva da solo su questo telefono<br>
+    Sprint sempre <b>senza</b> giubbotto · zavorra solo in camminata
+  </footer>
+</div>
+
+<script>
+const DATA = {
+  A:{focus:"Spinta + gambe",
+     warm:"5' camminata svelta (tapis in salita o fuori) <b>col giubbotto</b>",
+     ex:[
+       {id:"a1",name:"Push-up zavorrato",target:"4 × 8-12",q:"weighted push up correct form"},
+       {id:"a2",name:"Affondi camminati zavorrati",target:"4 × 10 / gamba",q:"weighted walking lunges form"},
+       {id:"a3",name:"Dip tra due sedie / parallele",target:"3 × 8-10",q:"weighted dips chest form"},
+       {id:"a4",name:"Squat zavorrato (o pistol assistito)",target:"3 × 12",q:"bodyweight squat pistol progression"},
+       {id:"a5",name:"Plank zavorrato",target:"3 × 45\"",q:"weighted plank hold"}
+     ],
+     fin:{name:"Sprint fuori",target:"30\" sprint / 90\" cammino × 5 — SENZA zavorra",q:"sprint interval running workout"}},
+  B:{focus:"Trazione + posteriore",
+     warm:"5' camminata svelta (tapis in salita o fuori) <b>col giubbotto</b>",
+     ex:[
+       {id:"b1",name:"Trazioni / chin-up zavorrate *",target:"4 × 6-8",q:"weighted pull up form"},
+       {id:"b2",name:"Hip thrust / ponte glutei zavorrato",target:"4 × 12",q:"weighted hip thrust glute bridge form"},
+       {id:"b3",name:"Rematore inverso (sotto un tavolo)",target:"3 × 10",q:"inverted row bodyweight form"},
+       {id:"b4",name:"Nordic curl / femorali",target:"3 × 6",q:"nordic hamstring curl progression"},
+       {id:"b5",name:"Hollow hold",target:"3 × 40\"",q:"hollow body hold form"}
+     ],
+     fin:{name:"Camminata zavorrata (rucking)",target:"15-20' passo svelto col giubbotto, in salita",q:"rucking weighted vest walk fat loss"}},
+  C:{focus:"Misto metabolico",
+     warm:"5' camminata svelta (tapis in salita o fuori) <b>col giubbotto</b>",
+     ex:[
+       {id:"c1",name:"Pike / handstand push-up",target:"4 × 6-8",q:"pike push up to handstand push up"},
+       {id:"c2",name:"Step-up alti zavorrati (panca/sedia)",target:"4 × 10 / gamba",q:"weighted step up form"},
+       {id:"c3",name:"Push-up presa stretta zavorrato",target:"3 × 12",q:"close grip push up form"},
+       {id:"c4",name:"Bulgarian split squat zavorrato",target:"3 × 10 / gamba",q:"bulgarian split squat form"},
+       {id:"c5",name:"Plank laterale",target:"3 × 30\" / lato",q:"side plank form"}
+     ],
+     fin:{name:"Navette / sprint fuori",target:"20\" sprint / 40\" recupero × 8 — corpo libero",q:"shuttle run hiit sprint workout"}}
+};
+const CHECK = '<svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0a2912" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const yt = q => "https://www.youtube.com/results?search_query="+encodeURIComponent(q);
+
+const S = JSON.parse(localStorage.getItem("wkt")||"{}");
+const save = ()=>localStorage.setItem("wkt",JSON.stringify(S));
+const g = k => S[k]||"";
+const set = (k,v)=>{ if(v===""||v===false){delete S[k]} else {S[k]=v} save(); };
+
+let week = localStorage.getItem("wk_week")||"S1";
+let day  = localStorage.getItem("wk_day")||"A";
+
+function buildPills(){
+  const w = document.getElementById("weeks");
+  w.innerHTML="";
+  for(let i=1;i<=8;i++){
+    const p=document.createElement("div");
+    p.className="pill"+(week==="S"+i?" on":"");
+    p.textContent="S"+i;
+    p.onclick=()=>{week="S"+i;localStorage.setItem("wk_week",week);render();buildPills();};
+    w.appendChild(p);
+  }
+  const d=document.getElementById("days");
+  d.innerHTML="";
+  ["A","B","C"].forEach(x=>{
+    const p=document.createElement("div");
+    p.className="pill"+(day===x?" on":"");
+    p.textContent="Giorno "+x;
+    p.onclick=()=>{day=x;localStorage.setItem("wk_day",day);render();buildPills();};
+    d.appendChild(p);
+  });
+}
+
+function render(){
+  const D=DATA[day];
+  const base=week+"."+day+".";
+  let totSets=0, doneSets=0;
+  D.ex.forEach(e=>{
+    const n=parseInt(e.target)||1; totSets+=n;
+    for(let i=1;i<=n;i++) if(g(base+e.id+".s"+i)) doneSets++;
+  });
+
+  let h=`<div class="daytitle">
+      <div><h2>Giorno ${day}</h2><span class="focus">${D.focus}</span></div>
+      <span class="prog">${doneSets}/${totSets} serie ✓</span>
+    </div>
+    <div class="warm"><span class="ico">🔥</span><div><b>Riscaldamento</b> — ${D.warm}</div></div>`;
+
+  D.ex.forEach(e=>{
+    const kd=base+e.id;
+    const n=parseInt(e.target)||1;
+    let dn=0; for(let i=1;i<=n;i++) if(g(kd+".s"+i)) dn++;
+    const done=dn===n;
+    const kg=g(kd+".kg");
+    const note=g(kd+".note");
+    let chips=`<span class="slab">serie</span>`;
+    for(let i=1;i<=n;i++){
+      chips+=`<button class="setchip${g(kd+".s"+i)?' on':''}" onclick="toggleSet('${kd}',${i})">${i}</button>`;
+    }
+    h+=`<div class="card${done?' done':''}" id="card-${e.id}">
+      <div class="top">
+        <div class="info">
+          <div class="name">${e.name}</div>
+          <div class="target">${e.target}</div>
+        </div>
+      </div>
+      <div class="sets">${chips}</div>
+      <div class="row2">
+        <div class="kg"><span class="t">peso</span>
+          <input type="number" inputmode="decimal" placeholder="—" value="${kg}"
+                 oninput="set('${kd}.kg',this.value)">
+          <span class="u">kg</span></div>
+        <a class="vid" href="${yt(e.q)}" target="_blank" rel="noopener">▶ video</a>
+        <button class="notebtn${note?' has':''}" onclick="toggleNote('${e.id}')">✎</button>
+      </div>
+      <div class="exnote${note?' open':''}" id="note-${e.id}">
+        <textarea placeholder="Come è andato? Mi è piaciuto? Da cambiare?"
+          oninput="noteIn('${kd}','${e.id}',this.value)">${note}</textarea>
+      </div>
+    </div>`;
+  });
+
+  const f=D.fin;
+  const fk=base+"fin.done";
+  h+=`<div class="fin">
+      <div class="badge">🏁 Finisher</div>
+      <div class="name">${f.name}</div>
+      <div class="target">${f.target}</div>
+      <div class="row2" style="padding-left:0;padding-right:0">
+        <button class="check" onclick="toggle('${fk}')" style="${g(fk)?'background:var(--ok);border-color:var(--ok)':''}">${CHECK}</button>
+        <a class="vid" href="${yt(f.q)}" target="_blank" rel="noopener" style="margin-left:8px">▶ video</a>
+      </div>
+    </div>`;
+
+  const sk=base+"sessnote";
+  h+=`<div class="sessnote">
+      <p class="label">📝 Note della sessione</p>
+      <textarea placeholder="Come mi sono sentito oggi? Energia, dolori, cosa ha funzionato, cosa cambiare la prossima volta..."
+        oninput="set('${sk}',this.value)">${g(sk)}</textarea>
+    </div>`;
+
+  document.getElementById("view").innerHTML=h;
+}
+
+function toggle(k){ set(k, g(k)?false:true); render(); }
+function toggleSet(kd,i){ const k=kd+".s"+i; set(k, g(k)?false:true); render(); }
+function toggleNote(id){ document.getElementById("note-"+id).classList.toggle("open"); }
+function noteIn(kd,id,v){
+  set(kd+".note",v);
+  document.querySelector("#card-"+id+" .notebtn").classList.toggle("has",!!v);
+}
+
+buildPills();
+render();
+</script>
+</body>
+</html>
