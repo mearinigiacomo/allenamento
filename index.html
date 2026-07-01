@@ -184,8 +184,18 @@ const DATA = {
        {id:"c4",name:"Bulgarian split squat zavorrato",target:"3 × 10 / gamba",q:"bulgarian split squat form"},
        {id:"c5",name:"Plank laterale",target:"3 × 30\" / lato",q:"side plank form"}
      ],
-     fin:{name:"Navette / sprint fuori",target:"20\" sprint / 40\" recupero × 8 — corpo libero",q:"shuttle run hiit sprint workout"}}
+     fin:{name:"Navette / sprint fuori",target:"20\" sprint / 40\" recupero × 8 — corpo libero",q:"shuttle run hiit sprint workout"}},
+  E:{focus:"Sprint & carica del mattino · 20-25' · corpo libero",
+     warm:"3-4' saltelli sul posto + circonduzioni braccia + high knees progressivi",
+     ex:[
+       {id:"e1",name:"Sprint",target:"8 × 20\" sprint / 40\" cammino",q:"sprint interval workout"},
+       {id:"e2",name:"Jump squat (squat con salto)",target:"3 × 12",q:"jump squat proper form"},
+       {id:"e3",name:"Burpee",target:"3 × 8",q:"burpee proper form"},
+       {id:"e4",name:"Mountain climber",target:"3 × 30\"",q:"mountain climbers form"}
+     ],
+     fin:{name:"Tuffo in piscina 🥶",target:"Tuffo + qualche bracciata — scarica di lucidità ed energia",q:"cold water immersion morning energy benefits"}}
 };
+const LBL={A:"Giorno A",B:"Giorno B",C:"Giorno C",E:"⚡ Energia"};
 const CHECK = '<svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0a2912" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const yt = q => "https://www.youtube.com/results?search_query="+encodeURIComponent(q);
 
@@ -209,10 +219,10 @@ function buildPills(){
   }
   const d=document.getElementById("days");
   d.innerHTML="";
-  ["A","B","C"].forEach(x=>{
+  ["A","B","C","E"].forEach(x=>{
     const p=document.createElement("div");
     p.className="pill"+(day===x?" on":"");
-    p.textContent="Giorno "+x;
+    p.textContent=LBL[x];
     p.onclick=()=>{day=x;localStorage.setItem("wk_day",day);render();buildPills();};
     d.appendChild(p);
   });
@@ -228,7 +238,7 @@ function render(){
   });
 
   let h=`<div class="daytitle">
-      <div><h2>Giorno ${day}</h2><span class="focus">${D.focus}</span></div>
+      <div><h2>${LBL[day]}</h2><span class="focus">${D.focus}</span></div>
       <span class="prog">${doneSets}/${totSets} serie ✓</span>
     </div>
     <div class="warm"><span class="ico">🔥</span><div><b>Riscaldamento</b> — ${D.warm}</div></div>`;
