@@ -41,7 +41,7 @@
     transition:.15s;white-space:nowrap;
   }
   .pill.on{background:var(--acc);border-color:var(--acc);color:#231603}
-  .pills.days .pill{flex:1;text-align:center;min-width:0}
+  .pills.days .pill{text-align:center}
 
   .daytitle{display:flex;align-items:baseline;justify-content:space-between;margin:18px 0 4px}
   .daytitle h2{font-size:22px;margin:0}
@@ -193,9 +193,20 @@ const DATA = {
        {id:"e3",name:"Burpee",target:"3 × 8",q:"burpee proper form"},
        {id:"e4",name:"Mountain climber",target:"3 × 30\"",q:"mountain climbers form"}
      ],
-     fin:{name:"Tuffo in piscina 🥶",target:"Tuffo + qualche bracciata — scarica di lucidità ed energia",q:"cold water immersion morning energy benefits"}}
+     fin:{name:"Tuffo in piscina 🥶",target:"Tuffo + qualche bracciata — scarica di lucidità ed energia",q:"cold water immersion morning energy benefits"}},
+  F:{focus:"Sprint & potenza · 40' · corpo libero",
+     warm:"5' corsetta leggera + mobilità dinamica + skip / calciata dietro",
+     ex:[
+       {id:"f1",name:"Sprint (blocco lungo)",target:"10 × 20\" sprint / 40\" cammino",q:"sprint interval workout"},
+       {id:"f2",name:"Jump squat (squat con salto)",target:"3 × 15",q:"jump squat proper form"},
+       {id:"f3",name:"Affondi saltati (jump lunge)",target:"3 × 20",q:"jumping lunges form"},
+       {id:"f4",name:"Burpee",target:"3 × 10",q:"burpee proper form"},
+       {id:"f5",name:"Mountain climber",target:"3 × 40\"",q:"mountain climbers form"},
+       {id:"f6",name:"Sprint finale all-out",target:"4 × 10\" max",q:"sprint technique running"}
+     ],
+     fin:{name:"Tuffo in piscina 🥶",target:"Tuffo + qualche vasca — chiusura carica e lucida",q:"cold water immersion morning energy benefits"}}
 };
-const LBL={A:"Giorno A",B:"Giorno B",C:"Giorno C",E:"⚡ Energia"};
+const LBL={A:"Giorno A",B:"Giorno B",C:"Giorno C",E:"⚡ Energia",F:"⚡ Energia 40"};
 const CHECK = '<svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#0a2912" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const yt = q => "https://www.youtube.com/results?search_query="+encodeURIComponent(q);
 
@@ -219,7 +230,7 @@ function buildPills(){
   }
   const d=document.getElementById("days");
   d.innerHTML="";
-  ["A","B","C","E"].forEach(x=>{
+  ["A","B","C","E","F"].forEach(x=>{
     const p=document.createElement("div");
     p.className="pill"+(day===x?" on":"");
     p.textContent=LBL[x];
